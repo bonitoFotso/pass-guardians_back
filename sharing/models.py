@@ -7,13 +7,16 @@ from django.utils import timezone
 
 from core.models import BaseModel, PermissionChoices
 from django.contrib.auth import get_user_model
+
+from credential.models import Credential
+from folder.models import Folder
 User = get_user_model()
 
 
 
 class SharedCredential(BaseModel):
     """Partage de credentials avec permissions granulaires"""
-    credential = models.ForeignKey('Credential', on_delete=models.CASCADE, related_name='shared_with')
+    credential = models.ForeignKey(Credential, on_delete=models.CASCADE, related_name='shared_with')
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='shared_credentials')
     permission = models.CharField(max_length=10, choices=PermissionChoices.choices, default=PermissionChoices.READ)
     shared_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='credentials_shared')
@@ -56,7 +59,7 @@ class SharedCredential(BaseModel):
 
 class SharedFolder(BaseModel):
     """Partage de dossiers avec permissions granulaires"""
-    folder = models.ForeignKey('Folder', on_delete=models.CASCADE, related_name='shared_with')
+    folder = models.ForeignKey(Folder, on_delete=models.CASCADE, related_name='shared_with')
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='shared_folders')
     permission = models.CharField(max_length=10, choices=PermissionChoices.choices, default=PermissionChoices.READ)
     shared_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='folders_shared')

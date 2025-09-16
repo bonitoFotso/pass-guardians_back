@@ -55,6 +55,7 @@ LOCAL_APPS = [
     'base',
     'folder',
     'credential',
+    'sharing',
 ]
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
