@@ -1,5 +1,7 @@
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
+
+from base.models import AppSettings
 from .models import User
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
@@ -36,6 +38,21 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
             'full_name': self.user.full_name,
             #'is_verified': self.user.is_verified,
         }
+
+        # recupere le app_settings de l'utilisateur
+        appSetting = AppSettings.objects.filter(user=self.user).first()
+        if appSetting:
+            data['app_settings'] = {
+                'theme': appSetting.theme,
+                'auto_lock_timeout': appSetting.auto_lock_timeout,
+                'clipboard_clear_timeout': appSetting.clipboard_clear_timeout,
+                'enable_biometric': appSetting.enable_biometric,
+                'show_password_strength': appSetting.show_password_strength,
+                'auto_fill_enabled': appSetting.auto_fill_enabled,
+                'breach_monitoring': appSetting.breach_monitoring,
+                'login_notifications': appSetting.login_notifications,
+                'export_format': appSetting.export_format,
+            }
         
         return data
 

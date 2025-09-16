@@ -61,6 +61,9 @@ services:
       - DB_HOST=db
       - DB_PORT=5432
       - REDIS_URL=redis://redis:6379/0
+      - SUPERUSER_USERNAME=${SUPERUSER_USERNAME:-admin}
+      - SUPERUSER_EMAIL=${SUPERUSER_EMAIL:-admin@monsite.com}
+      - SUPERUSER_PASSWORD=${SUPERUSER_PASSWORD:-motdepasse123}
     depends_on:
       db:
         condition: service_healthy
@@ -68,6 +71,7 @@ services:
         condition: service_started
     command: >
       sh -c "python manage.py migrate &&
+             python manage.py csu &&
              python manage.py runserver 0.0.0.0:8000"
     restart: unless-stopped
     networks:

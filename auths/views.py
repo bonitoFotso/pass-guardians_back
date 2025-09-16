@@ -1,7 +1,6 @@
 from rest_framework import viewsets, permissions
 from rest_framework.response import Response
 from django.contrib.auth import get_user_model
-from .models import Technicien
 from .serializers import UserSerializer
 from rest_framework import status, permissions
 from rest_framework.decorators import action
@@ -9,7 +8,6 @@ from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
 from rest_framework.mixins import CreateModelMixin, RetrieveModelMixin, UpdateModelMixin
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
-from django.contrib.auth import get_user_model
 from drf_spectacular.utils import extend_schema, extend_schema_view
 
 from .serializers import (
