@@ -64,6 +64,7 @@ services:
       - SUPERUSER_USERNAME=${SUPERUSER_USERNAME:-admin}
       - SUPERUSER_EMAIL=${SUPERUSER_EMAIL:-admin@monsite.com}
       - SUPERUSER_PASSWORD=${SUPERUSER_PASSWORD:-motdepasse123}
+      - ENCRYPTION_KEY=${ENCRYPTION_KEY:-tcSXo_TrT-mIFqyZpAjDeSLhxkPKdxWO2aAul-LaWXM=}
     depends_on:
       db:
         condition: service_healthy

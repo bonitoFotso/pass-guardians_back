@@ -6,9 +6,11 @@ from django.db import models
 from django.utils import timezone
 from django.conf import settings
 from cryptography.fernet import Fernet
-
+import base64
 from core.models import BaseModel
 from django.contrib.auth import get_user_model
+
+from folder.models import Folder
 User = get_user_model()
 
 class Category(BaseModel):
@@ -51,7 +53,7 @@ class Credential(BaseModel):
     
     # Relations
     category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True, blank=True)
-    folder = models.ForeignKey('Folder', on_delete=models.CASCADE, null=True, blank=True, related_name='credentials')
+    folder = models.ForeignKey(Folder, on_delete=models.CASCADE, null=True, blank=True, related_name='credentials')
     
     # Métadonnées
     is_favorite = models.BooleanField(default=False, db_index=True)
@@ -92,8 +94,33 @@ class Credential(BaseModel):
         if self.password_encrypted:
             try:
                 fernet = self._get_fernet()
-                return fernet.decrypt(self.password_encrypted).decode()
-            except Exception:
+                
+                # Handle different data types from database
+                encrypted_data = self.password_encrypted
+                
+                # Convert memoryview or other database types to bytes
+                if hasattr(encrypted_data, 'tobytes'):
+                    encrypted_data = encrypted_data.tobytes()
+                elif isinstance(encrypted_data, (list, tuple)):
+                    encrypted_data = bytes(encrypted_data)
+                elif not isinstance(encrypted_data, (bytes, str)):
+                    encrypted_data = bytes(encrypted_data)
+                
+                # Convert bytes to string if needed
+                if isinstance(encrypted_data, bytes):
+                    encrypted_data = encrypted_data.decode('utf-8')
+                
+                # Handle base64url encoding (your token format)
+                if isinstance(encrypted_data, str):
+                    if '-' in encrypted_data or '_' in encrypted_data:
+                        encrypted_data = encrypted_data.replace('-', '+').replace('_', '/')
+                    # Convert back to bytes for Fernet
+                    encrypted_data = encrypted_data.encode('utf-8')
+                
+                return fernet.decrypt(encrypted_data).decode()
+                
+            except Exception as e:
+                print(f"Decryption error: {e}")
                 return ""
         return ""
     

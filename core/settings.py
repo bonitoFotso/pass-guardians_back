@@ -13,6 +13,8 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 from datetime import timedelta
 from pathlib import Path
 from decouple import config
+import os
+from cryptography.fernet import Fernet
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -51,7 +53,8 @@ THIRD_PARTY_APPS = [
 LOCAL_APPS = [
     'auths',
     'base',
-    'folder'
+    'folder',
+    'credential',
 ]
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
@@ -203,3 +206,14 @@ SIMPLE_JWT = {
     'AUTH_TOKEN_CLASSES': ('rest_framework_simplejwt.tokens.AccessToken',),
 }
 
+ENCRYPTION_KEY = os.environ.get('ENCRYPTION_KEY', '').encode()
+
+# Validation de la clé
+if not ENCRYPTION_KEY:
+    raise ValueError("ENCRYPTION_KEY must be set in environment variables")
+
+try:
+    # Tester que la clé est valide
+    Fernet(ENCRYPTION_KEY)
+except Exception:
+    raise ValueError("ENCRYPTION_KEY is not a valid Fernet key")
