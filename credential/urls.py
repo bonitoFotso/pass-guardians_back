@@ -38,31 +38,31 @@ urlpatterns = [
          name='category-stats'),
     
     # URLs spécifiques pour les credentials
-    path('api/credentials/<uuid:pk>/mark-used/', 
+    path('api/credentials-v/<uuid:pk>/mark-used/', 
          CredentialViewSet.as_view({'post': 'mark_used'}), 
          name='credential-mark-used'),
-    path('api/credentials/<uuid:pk>/toggle-favorite/', 
+    path('api/credentials-v/<uuid:pk>/toggle-favorite/', 
          CredentialViewSet.as_view({'post': 'toggle_favorite'}), 
          name='credential-toggle-favorite'),
-    path('api/credentials/<uuid:pk>/password-strength/', 
+    path('api/credentials-v/<uuid:pk>/password-strength/', 
          CredentialViewSet.as_view({'get': 'password_strength'}), 
          name='credential-password-strength'),
-    path('api/credentialss/generate-password/', 
+    path('api/credentials-v/generate-password/', 
          CredentialViewSet.as_view({'post': 'generate_password'}), 
          name='credential-generate-password'),
-    path('api/credentials/dashboard-stats/', 
+    path('api/credentials-v/dashboard-stats/', 
          CredentialViewSet.as_view({'get': 'dashboard_stats'}), 
          name='credential-dashboard-stats'),
-    path('api/credentials/export/', 
+    path('api/credentials-v/export/', 
          CredentialViewSet.as_view({'get': 'export_data'}), 
          name='credential-export'),
 
-    path('api/credentials/<uuid:pk>/reveal-password/',
+    path('api/credentials-v/<uuid:pk>/reveal-password/',
          CredentialViewSet.as_view({'get': 'reveal_password'}),
          name='credential-reveal-password'),
 
     # URLs utilitaires
-    path('api/credentials/<uuid:credential_id>/check-breach/', 
+    path('api/credentials-v/<uuid:credential_id>/check-breach/', 
          check_password_breach, 
          name='credential-check-breach'),
 
@@ -86,25 +86,25 @@ CATEGORIES:
 - GET    /api/categories/stats/               - Statistiques des catégories
 
 CREDENTIALS:
-- GET    /api/credentials/                    - Liste des credentials
-- POST   /api/credentials/                    - Créer un credential
-- GET    /api/credentials/{id}/               - Détail d'un credential
-- PUT    /api/credentials/{id}/               - Modifier un credential
-- PATCH  /api/credentials/{id}/               - Modifier partiellement un credential
-- DELETE /api/credentials/{id}/               - Supprimer un credential
-- POST   /api/credentials/{id}/mark-used/     - Marquer comme utilisé
-- POST   /api/credentials/{id}/toggle-favorite/ - Basculer favori
-- GET    /api/credentials/{id}/password-strength/ - Analyser la force du mot de passe
-- POST   /api/credentials/generate-password/  - Générer un mot de passe
-- GET    /api/credentials/dashboard-stats/    - Statistiques du tableau de bord
-- GET    /api/credentials/export/             - Exporter les données
+- GET    /api/credentials-v/                    - Liste des credentials
+- POST   /api/credentials-v/                    - Créer un credential
+- GET    /api/credentials-v/{id}/               - Détail d'un credential
+- PUT    /api/credentials-v/{id}/               - Modifier un credential
+- PATCH  /api/credentials-v/{id}/               - Modifier partiellement un credential
+- DELETE /api/credentials-v/{id}/               - Supprimer un credential
+- POST   /api/credentials-v/{id}/mark-used/     - Marquer comme utilisé
+- POST   /api/credentials-v/{id}/toggle-favorite/ - Basculer favori
+- GET    /api/credentials-v/{id}/password-strength/ - Analyser la force du mot de passe
+- POST   /api/credentials-v/generate-password/  - Générer un mot de passe
+- GET    /api/credentials-v/dashboard-stats/    - Statistiques du tableau de bord
+- GET    /api/credentials-v/export/             - Exporter les données
 
 PASSWORD HISTORY:
-- GET    /api/credentials/{id}/history/       - Historique des mots de passe d'un credential
-- GET    /api/credentials/{id}/history/{history_id}/ - Détail d'un historique
+- GET    /api/credentials-v/{id}/history/       - Historique des mots de passe d'un credential
+- GET    /api/credentials-v/{id}/history/{history_id}/ - Détail d'un historique
 
 UTILITIES:
-- GET    /api/credentials/{id}/check-breach/  - Vérifier si le mot de passe est compromis
+- GET    /api/credentials-v/{id}/check-breach/  - Vérifier si le mot de passe est compromis
 
 FILTRES DISPONIBLES:
 - ?search=terme                              - Recherche textuelle
@@ -118,10 +118,10 @@ FILTRES DISPONIBLES:
 - ?page=n&page_size=20                       - Pagination
 
 EXEMPLES D'UTILISATION:
-- GET /api/credentials/?category=1&is_favorite=true
-- GET /api/credentials/?search=google&ordering=-created_at
-- GET /api/credentials/?weak_passwords=true&page=2
-- POST /api/credentials/generate-password/ 
+- GET /api/credentials-v/?category=1&is_favorite=true
+- GET /api/credentials-v/?search=google&ordering=-created_at
+- GET /api/credentials-v/?weak_passwords=true&page=2
+- POST /api/credentials-v/generate-password/ 
   {
     "length": 16,
     "include_symbols": true,

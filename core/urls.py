@@ -23,4 +23,5 @@ urlpatterns = [
     path('api/settings/', include('base.urls')),
     path('api/', include('folder.urls')),
     path('', include('credential.urls')),
+    path('', include('sharing.urls')),
 ]
