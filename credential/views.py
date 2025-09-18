@@ -105,13 +105,16 @@ class CredentialViewSet(viewsets.ModelViewSet):
             'category', 'folder', 'owner'
         ).prefetch_related('password_history')
         
-        # Credentials possédés ou partagés
+        # Credentials possédés ou partagés avec l'utilisateur
         user_credentials = Q(owner=self.request.user)
-        shared_credentials = Q(is_shared=True)
+        shared_credentials = Q(
+            shared_with__user=self.request.user,  # Partagés spécifiquement avec l'utilisateur
+            shared_with__is_active=True  # Optionnel: vérifier que le partage est actif
+        )
         
         queryset = base_queryset.filter(user_credentials | shared_credentials)
         
-        # Filtres additionnels
+        # Reste du code pour les filtres additionnels...
         category_id = self.request.query_params.get('category')
         if category_id:
             queryset = queryset.filter(category_id=category_id)
