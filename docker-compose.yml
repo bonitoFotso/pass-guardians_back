@@ -1,22 +1,22 @@
 services:
-  db:
-    image: postgres:15
-    environment:
-      POSTGRES_DB: ${DB_NAME:-django_app}
-      POSTGRES_USER: ${DB_USER:-postgres}
-      POSTGRES_PASSWORD: ${DB_PASSWORD:-password}
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-    ports:
-      - "${DB_PORT:-5432}:5432"
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-postgres}"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-    restart: unless-stopped
-    networks:
-      - app-network
+  #db:
+  #  image: postgres:15
+  #  environment:
+  #    POSTGRES_DB: ${DB_NAME:-django_app}
+  #    POSTGRES_USER: ${DB_USER:-postgres}
+  #    POSTGRES_PASSWORD: ${DB_PASSWORD:-password}
+  #  volumes:
+  #    - postgres_data:/var/lib/postgresql/data
+  #  ports:
+  #    - "${DB_PORT:-5432}:5432"
+  #  healthcheck:
+  #    test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-postgres}"]
+  #    interval: 30s
+  #    timeout: 10s
+  #    retries: 3
+  #  restart: unless-stopped
+  #  networks:
+  #    - app-network
 
   redis:
     image: redis:7-alpine
@@ -28,21 +28,21 @@ services:
     networks:
       - app-network
 
-  pgadmin:
-    image: dpage/pgadmin4:latest
-    environment:
-      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_EMAIL:-admin@admin.com}
-      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_PASSWORD:-admin}
-      PGADMIN_LISTEN_PORT: 80
-    ports:
-      - "${PGADMIN_PORT:-5050}:80"
-    volumes:
-      - pgadmin_data:/var/lib/pgadmin
-    depends_on:
-      - db
-    restart: unless-stopped
-    networks:
-      - app-network
+  #pgadmin:
+  #  image: dpage/pgadmin4:latest
+  #  environment:
+  #    PGADMIN_DEFAULT_EMAIL: ${PGADMIN_EMAIL:-admin@admin.com}
+  #    PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_PASSWORD:-admin}
+  #    PGADMIN_LISTEN_PORT: 80
+  #  ports:
+  #    - "${PGADMIN_PORT:-5050}:80"
+  #  volumes:
+  #    - pgadmin_data:/var/lib/pgadmin
+  #  depends_on:
+  #    - db
+  #  restart: unless-stopped
+  #  networks:
+  #    - app-network
 
   web:
     build: .
@@ -55,19 +55,14 @@ services:
     environment:
       - DEBUG=${DEBUG:-True}
       - SECRET_KEY=${SECRET_KEY:-your-secret-key-here}
-      - DB_NAME=${DB_NAME:-django_app}
-      - DB_USER=${DB_USER:-postgres}
-      - DB_PASSWORD=${DB_PASSWORD:-password}
-      - DB_HOST=db
-      - DB_PORT=5432
-      - REDIS_URL=redis://redis:6379/0
+      - DATABASE_URL=${DATABASE_URL:-postgres://postgres:password@db:5432/django_app}
       - SUPERUSER_USERNAME=${SUPERUSER_USERNAME:-admin}
       - SUPERUSER_EMAIL=${SUPERUSER_EMAIL:-admin@monsite.com}
       - SUPERUSER_PASSWORD=${SUPERUSER_PASSWORD:-motdepasse123}
       - ENCRYPTION_KEY=${ENCRYPTION_KEY:-tcSXo_TrT-mIFqyZpAjDeSLhxkPKdxWO2aAul-LaWXM=}
     depends_on:
-      db:
-        condition: service_healthy
+      #db:
+      #  condition: service_healthy
       redis:
         condition: service_started
     command: >
@@ -79,9 +74,9 @@ services:
       - app-network
 
 volumes:
-  postgres_data:
+  #postgres_data:
   redis_data:
-  pgadmin_data:
+  #pgadmin_data:
   static_volume:
   media_volume:
 

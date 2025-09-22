@@ -35,6 +35,7 @@ venv/
 ENV/
 .env
 .venv/
+.env.local
 
 # IDE
 .idea/

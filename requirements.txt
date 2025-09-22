@@ -12,6 +12,7 @@ click-plugins==1.1.1.2
 click-repl==0.3.0
 cryptography==45.0.7
 defusedxml==0.7.1
+dj-database-url==3.0.1
 Django==5.2.6
 django-allauth==0.57.0
 django-cors-headers==4.3.1
