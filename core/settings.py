@@ -27,9 +27,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = config('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = config('DEBUG', default=False, cast=bool)
-
-ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='*').split(',')
+#DEBUG = config('DEBUG', default=False, cast=bool)
+DEBUG = True
+ALLOWED_HOSTS = ['217.79.254.135', 'localhost']
 
 
 # Application definition
@@ -63,10 +63,20 @@ INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 
 AUTH_USER_MODEL = 'auths.User'
 
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+SECURE_SSL_REDIRECT = True
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
+CSRF_COOKIE_SAMESITE = 'None'  # Important pour cross-domain
+# Pour certificat auto-signé, on évite HSTS strict
+SECURE_BROWSER_XSS_FILTER = True
+SECURE_CONTENT_TYPE_NOSNIFF = True
+
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'corsheaders.middleware.CorsMiddleware',
+    #'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -170,7 +180,15 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
 # CORS settings
+#CORS_ALLOWED_ORIGINS = [
+#    "https://pass-guardians.vercel.app",
+#    "https://217.79.254.135",  # Votre serveur
+#]
 CORS_ALLOW_ALL_ORIGINS = True
+CSRF_TRUSTED_ORIGINS = [
+    'http://127.0.0.1:80',
+    'https://217.79.254.135',
+]
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOW_HEADERS = [
     'Authorization',
@@ -212,7 +230,8 @@ SIMPLE_JWT = {
     'AUTH_TOKEN_CLASSES': ('rest_framework_simplejwt.tokens.AccessToken',),
 }
 
-ENCRYPTION_KEY = os.environ.get('ENCRYPTION_KEY', '').encode()
+# ENCRYPTION_KEY = config('ENCRYPTION_KEY')
+ENCRYPTION_KEY = 'tcSXo_TrT-mIFqyZpAjDeSLhxkPKdxWO2aAul-LaWXM='
 
 # Validation de la clé
 if not ENCRYPTION_KEY:
